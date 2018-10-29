@@ -10,8 +10,6 @@ public class Robot extends IterativeRobot {
 	WPI_TalonSRX rightMotor = new WPI_TalonSRX(id);
 	Joystick rightStick = new Joystick(id);
 	
-	
-	
 	@Override
 	public void robotInit() {
 		System.out.println("Robot Initializing.");
@@ -24,8 +22,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		double leftPower = stickOfJoy.getRawAxis(axisNum);
-		double rightPower = stickOfJoy.getRawAxis(axisNum);
+		double leftPower = rightStick.getRawAxis(axisNum);
+		double rightPower = rightStick.getRawAxis(axisNum);
 		leftMotor.set(ControlMode.PercentOutput, leftPower);
 		rightMotor.set(ControlMode.PercentOutput, rightPower);
 	}
