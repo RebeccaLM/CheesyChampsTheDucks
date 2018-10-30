@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.*;
 
 public class Robot extends IterativeRobot {
 	
-	int leftTalon1Id = 1; //CHANGE TO MATCH ACTUAL IDs
-	int rightTalon1Id = 2;
-	int leftTalon2Id = 3;
-	int rightTalon2Id = 4;
-	int rightStickId = 1;
+	final int LEFT_TALON_1_ID = 1; //CHANGE TO MATCH ACTUAL IDs
+	final int RIGHT_TALON_1_ID = 2;
+	final int LEFT_TALON_2_ID = 3;
+	final int RIGHT_TALON_2_ID = 4;
+	final int RIGHT_STICK_ID = 1;
 
 	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(leftTalon1Id);
 	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(rightTalon1Id);
@@ -20,25 +20,25 @@ public class Robot extends IterativeRobot {
 	Encoder leftEncoder = new Encoder(); //MUST FIND CORRECT CONSTRUCTOR
 	Encoder rightEncoder = new Encoder();
 
-	double intermediateVal = 0.5; //CHANGE TO DESIRED VALUE
+	final double INTERMEDIATE_VAL = 0.5; //CHANGE TO DESIRED VALUE
 	double leftSpeed = 0;
 	double rightSpeed = 0;
 
-	double halfRobotWidth = 1.088; //in feet
-	double halfRobotLength = 0.834; //in feet
+	final double HALF_ROBOT_WIDTH = 1.088; //in feet
+	final double HALF_ROBOT_LENGTH = 0.834; //in feet
 
-	double autoSpeed = 0.75; //SET TO WANTED SPEED DURING AUTO
+	final double AUTO_SPEED = 0.75; //SET TO WANTED SPEED DURING AUTO
 
 	public double interpolateVal(double want, double actual) { //for easing in and out of velocities
-		return actual + intermediateVal * (want - actual);
+		return actual + INTERMEDIATE_VAL * (want - actual);
 	}
 
 	@Override
 	public void robotInit() {
 		System.out.println("Robot Initializing.");
 		
-		leftMotor2.set(ControlMode.Follower, leftTalon1Id);
-		rightMotor2.set(ControlMode.Follower, rightTalon1Id);
+		leftMotor2.set(ControlMode.Follower, LEFT_TALON_1_ID);
+		rightMotor2.set(ControlMode.Follower, RIGHT_TALON_1_ID);
 
 		leftEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI); //SET TO NUMBER OF FEET PER ROTATION
 		rightEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI);
@@ -62,8 +62,8 @@ public class Robot extends IterativeRobot {
 		rightEncoder.reset();
 		
 		while(leftEncoder.getDistance() < distance && rightEncoder.getDistance() < distance) {
-			leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
-			rightMotor1.set(ControlMode.PercentOutput, autoSpeed);
+			leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+			rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
 		}
 		
 		leftMotor1.set(ControlMode.PercentOutput, 0);
@@ -74,17 +74,17 @@ public class Robot extends IterativeRobot {
 		leftEncoder.reset();
 		rightEncoder.reset();
 		
-		double circumference = Math.hypot(halfRobotLength, halfRobotWidth) * radians/2;
+		double circumference = Math.hypot(HALF_ROBOT_LENGTH, HALF_ROBOT_WIDTH) * radians/2;
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor1.set(ControlMode.PercentOutput, -autoSpeed);
-				rightMotor.set(ControlMode.PercentOutput, autoSpeed);
+				leftMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
+				rightMotor.set(ControlMode.PercentOutput, AUTO_SPEED);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor1.set(ControlMode.PercentOutput, -autoSpeed);
+				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				rightMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
 			}
 		} else {
 			return;
@@ -103,13 +103,13 @@ public class Robot extends IterativeRobot {
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < outCircum && rightEncoder.getDistance() < inCircum) {
-				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor1.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
+				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED * inCircum / outCircum);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < inCircum && rightEncoder.getDistance() < outCircum) {
-				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor1.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
+				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED * inCircum / outCircum);
 			}
 		} else {
 			return;
