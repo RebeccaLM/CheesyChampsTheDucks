@@ -1,5 +1,15 @@
 # CheesyChampsTheDucks
 This is a list of tasks for Team C.
+## Design and Strategy
+- [ ] Design
+  - [ ] Intake
+  - [ ] Storage
+  - [ ] Outtake
+- [ ] Strategy
+  - [ ] Autonomous Path
+    * Should we try to put it in the fridge?
+  * How should we play the game?
+    * How often to drop into the fridge?
 ## Programming
 - [X] Check repository
 - [ ] Teleop tank drive
