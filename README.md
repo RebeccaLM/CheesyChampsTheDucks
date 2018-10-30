@@ -1,12 +1,19 @@
 # CheesyChampsTheDucks
-This is the code for The Ducks.
-
-- [X] Check Repository
-- [ ] Write tank drive code ( clone from another repository) 
-- [ ] Write autonomous drive code
-- [ ] generate path, find each wheels path, 
-- [ ] control systems that keeps it on given path, 
-- [ ] turn 90 degrees,
-- [ ] driving straight of a given distance 
-- [ ] PID (motion control, math control, correcting itself )  
-- [ ] jobs after design 
+This is a list of tasks for Team C.
+## Programming
+- [X] Check repository
+- [ ] Teleop tank drive
+  - [X] Write tank drive code (take from another repository) 
+  - [ ] Test tank drive code
+- [ ] Autonomous drive code
+  - [X] Write basic movement methods
+    - [X] Straight movement
+    - [X] Rotations
+    - [X] Arcs
+  - [ ] Write code that follows the path
+  - [ ] Test autonomous code
+- [ ] Program Intake
+  -*Need intake design*
+- [ ] Program Outtake
+  -*Need outtake design*
+- [ ] PID (motion control, math control, correcting itself)   
