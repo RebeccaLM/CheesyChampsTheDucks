@@ -5,11 +5,28 @@ This is a list of tasks for Team C.
   - [ ] Intake
   - [ ] Storage
   - [ ] Outtake
+  - [ ] Overall Processes and Structue
+  - [ ] Prototyping
 - [ ] Strategy
   - [ ] Autonomous Path
     * Should we try to put it in the fridge?
-  * How should we play the game?
+  - [ ] How should we play the game?
     * How often to drop into the fridge?
+## CAD
+  - [ ] Chassis
+  - [ ] Intake
+  - [ ] Storage
+  - [ ] Outtake
+## Mechanical
+  - [ ] Electrical Board
+    - [ ] Set up electrical components
+    - [ ] *Mount Board*
+  - [ ] Prototyping
+  - [ ] Machining
+    - [ ] Make intake
+    - [ ] Make storage system
+    - [ ] Make outtake
+  - [ ] Assembly
 ## Programming
 - [X] Check repository
 - [ ] Teleop tank drive
