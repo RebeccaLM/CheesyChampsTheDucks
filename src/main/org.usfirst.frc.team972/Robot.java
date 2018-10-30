@@ -5,14 +5,22 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.*;
 
 public class Robot extends IterativeRobot {
+	
+	int leftTalon1Id = 1; //CHANGE TO MATCH ACTUAL IDs
+	int rightTalon1Id = 2;
+	int leftTalon2Id = 3;
+	int rightTalon2Id = 4;
+	int rightStickId = 1;
 
-	WPI_TalonSRX leftMotor = new WPI_TalonSRX(id);
-	WPI_TalonSRX rightMotor = new WPI_TalonSRX(id);
-	Joystick rightStick = new Joystick(id);
+	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(leftTalon1Id);
+	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(rightTalon1Id);
+	WPI_TalonSRX leftMotor2 = new WPI_TalonSRX(leftTalon2Id);
+	WPI_TalonSRX rightMotor2 = new WPI_TalonsRX(rightTalon2Id);
+	Joystick rightStick = new Joystick(rightStickId);
 	Encoder leftEncoder = new Encoder(); //MUST FIND CORRECT CONSTRUCTOR
 	Encoder rightEncoder = new Encoder();
 
-	double intermediateVal = 0.5;
+	double intermediateVal = 0.5; //CHANGE TO DESIRED VALUE
 	double leftSpeed = 0;
 	double rightSpeed = 0;
 
@@ -28,6 +36,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		System.out.println("Robot Initializing.");
+		
+		leftMotor2.set(ControlMode.Follower, leftTalon1Id);
+		rightMotor2.set(ControlMode.Follower, rightTalon1Id);
 
 		leftEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI); //SET TO NUMBER OF FEET PER ROTATION
 		rightEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI);
@@ -42,53 +53,69 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		leftSpeed = interpolateVal(rightStick.getRawAxis(axisNum), leftSpeed);
 		rightSpeed = interpolateVal(rightStick.getRawAxis(axisNum), rightSpeed);
-		leftMotor.set(ControlMode.PercentOutput, leftSpeed);
-		rightMotor.set(ControlMode.PercentOutput, rightSpeed);
+		leftMotor1.set(ControlMode.PercentOutput, leftSpeed);
+		rightMotor1.set(ControlMode.PercentOutput, rightSpeed);
 	}
 
 	public void moveStraight(double distance) { //move forward or backwards, in feet, UNTESTED
 		leftEncoder.reset();
 		rightEncoder.reset();
+		
 		while(leftEncoder.getDistance() < distance && rightEncoder.getDistance() < distance) {
-			leftMotor.set(ControlMode.PercentOutput, autoSpeed);
-			rightMotor.set(ControlMode.PercentOutput, autoSpeed);
+			leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
+			rightMotor1.set(ControlMode.PercentOutput, autoSpeed);
 		}
+		
+		leftMotor1.set(ControlMode.PercentOutput, 0);
+		rightMotor1.set(ControlMode.PercentOutput, 0);
 	}
 
-	public void rotate(double radians, int direction) { // Angle in radians, -1 is left, 1 is right
+	public void rotate(double radians, int direction) { // Angle in radians, <0 is left, >0 is right UNTESTED
+		leftEncoder.reset();
+		rightEncoder.reset();
+		
 		double circumference = Math.hypot(halfRobotLength, halfRobotWidth) * radians/2;
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor.set(ControlMode.PercentOutput, -autoSpeed);
+				leftMotor1.set(ControlMode.PercentOutput, -autoSpeed);
 				rightMotor.set(ControlMode.PercentOutput, autoSpeed);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor.set(ControlMode.PercentOutput, -autoSpeed);
+				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
+				rightMotor1.set(ControlMode.PercentOutput, -autoSpeed);
 			}
 		} else {
 			return;
 		}
+		
+		leftMotor1.set(ControlMode.PercentOutput, 0);
+		rightMotor1.set(ControlMode.PercentOutput, 0);
 	}
 
-	public void arc(double radius, double radians, int direction) { // Goes in an arc with a given radius, angle in radians, and direction -1 left and 1 right
+	public void arc(double radius, double radians, int direction) { // Goes in an arc with a given radius, angle in radians, direction <0 left and >0 right UNTESTED
+		leftEncoder.reset();
+		rightEncoder.reset();
+		
 		double outCircum = Math.pow(radius + halfRobotWidth, 2) * radians/2;
 		double inCircum = Math.pow(radius - halfRobotWidth, 2) * radians/2;
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < outCircum && rightEncoder.getDistance() < inCircum) {
-				leftMotor.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
+				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
+				rightMotor1.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < inCircum && rightEncoder.getDistance() < outCircum) {
-				leftMotor.set(ControlMode.PercentOutput, autoSpeed);
-				rightMotor.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
+				leftMotor1.set(ControlMode.PercentOutput, autoSpeed);
+				rightMotor1.set(ControlMode.PercentOutput, autoSpeed * inCircum / outCircum);
 			}
 		} else {
 			return;
 		}
+		
+		leftMotor1.set(ControlMode.PercentOutput, 0);
+		rightMotor1.set(ControlMode.PercentOutput, 0);
 	}
 }
