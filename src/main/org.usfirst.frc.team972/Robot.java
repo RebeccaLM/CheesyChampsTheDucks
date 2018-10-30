@@ -10,15 +10,17 @@ public class Robot extends IterativeRobot {
 	final int RIGHT_TALON_1_ID = 2;
 	final int LEFT_TALON_2_ID = 3;
 	final int RIGHT_TALON_2_ID = 4;
+	final int INTAKE_TALON_ID = 5;
 	final int RIGHT_STICK_ID = 1;
 
-	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(leftTalon1Id);
-	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(rightTalon1Id);
-	WPI_TalonSRX leftMotor2 = new WPI_TalonSRX(leftTalon2Id);
-	WPI_TalonSRX rightMotor2 = new WPI_TalonsRX(rightTalon2Id);
-	Joystick rightStick = new Joystick(rightStickId);
-	Encoder leftEncoder = new Encoder(); //MUST FIND CORRECT CONSTRUCTOR
-	Encoder rightEncoder = new Encoder();
+	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(LEFT_TALON_1_ID);
+	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(RIGHT_TALON_1_ID);
+	WPI_TalonSRX leftMotor2 = new WPI_TalonSRX(LEFT_TALON_2_ID);
+	WPI_TalonSRX rightMotor2 = new WPI_TalonSRX(RIGHT_TALON_2_ID);
+	WPI_TalonSRX intakeMotor = new WPI_TalonSRX(INTAKE_TALON_ID);
+	Joystick rightStick = new Joystick(RIGHT_STICK_ID);
+	Encoder leftEncoder = new Encoder(1, 1); //MUST FIND CORRECT CONSTRUCTOR
+	Encoder rightEncoder = new Encoder(1, 1);
 
 	final double INTERMEDIATE_VAL = 0.5; //CHANGE TO DESIRED VALUE
 	double leftSpeed = 0;
@@ -39,9 +41,24 @@ public class Robot extends IterativeRobot {
 		
 		leftMotor2.set(ControlMode.Follower, LEFT_TALON_1_ID);
 		rightMotor2.set(ControlMode.Follower, RIGHT_TALON_1_ID);
+		
 
 		leftEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI); //SET TO NUMBER OF FEET PER ROTATION
 		rightEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI);
+	}
+	
+	@Override
+	public void autonomousInit() {
+		moveStraight(4);
+		try {Thread.sleep(1000);} catch(Exception e) {System.err.println("Bad");}
+		rotate(Math.PI/2, 1);
+		try {Thread.sleep(2000);} catch(Exception e) {System.err.println("Bad");}
+		arc(2, Math.PI, 1);
+	}
+	
+	@Override
+	public void autonomousPeriodic() {
+		//Do nothing
 	}
 
 	@Override
@@ -51,8 +68,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		leftSpeed = interpolateVal(rightStick.getRawAxis(axisNum), leftSpeed);
-		rightSpeed = interpolateVal(rightStick.getRawAxis(axisNum), rightSpeed);
+		leftSpeed = interpolateVal(rightStick.getRawAxis(RIGHT_STICK_ID), leftSpeed);
+		rightSpeed = interpolateVal(rightStick.getRawAxis(RIGHT_STICK_ID), rightSpeed);
 		leftMotor1.set(ControlMode.PercentOutput, leftSpeed);
 		rightMotor1.set(ControlMode.PercentOutput, rightSpeed);
 	}
@@ -61,9 +78,14 @@ public class Robot extends IterativeRobot {
 		leftEncoder.reset();
 		rightEncoder.reset();
 		
-		while(leftEncoder.getDistance() < distance && rightEncoder.getDistance() < distance) {
-			leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
-			rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+		while(leftEncoder.getDistance() < distance || rightEncoder.getDistance() < distance) {
+			if (leftEncoder.getDistance() < distance) {
+				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+			}
+			if (rightEncoder.getDistance() < distance) {
+				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+			}
+			intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
 		}
 		
 		leftMotor1.set(ControlMode.PercentOutput, 0);
@@ -78,13 +100,23 @@ public class Robot extends IterativeRobot {
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
-				rightMotor.set(ControlMode.PercentOutput, AUTO_SPEED);
+				if (leftEncoder.getDistance() < circumference) {
+					leftMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
+				}
+				if (rightEncoder.getDistance() < circumference) {
+					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				}
+				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
-				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
-				rightMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
+				if (leftEncoder.getDistance() < circumference) {
+					leftMotor1.set(ControlMode.PercentOutput, -AUTO_SPEED);
+				}
+				if (rightEncoder.getDistance() < circumference) {
+					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				}
+				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
 			}
 		} else {
 			return;
@@ -98,18 +130,30 @@ public class Robot extends IterativeRobot {
 		leftEncoder.reset();
 		rightEncoder.reset();
 		
-		double outCircum = Math.pow(radius + halfRobotWidth, 2) * radians/2;
-		double inCircum = Math.pow(radius - halfRobotWidth, 2) * radians/2;
+		double outCircum = Math.pow(radius + HALF_ROBOT_WIDTH, 2) * radians/2;
+		double inCircum = Math.pow(radius - HALF_ROBOT_WIDTH, 2) * radians/2;
+		
+		double INNER_AUTO_SPEED = AUTO_SPEED * inCircum / outCircum;
 
 		if(direction > 0) {
 			while(leftEncoder.getDistance() < outCircum && rightEncoder.getDistance() < inCircum) {
-				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
-				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED * inCircum / outCircum);
+				if (leftEncoder.getDistance() < outCircum) {
+					leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				}
+				if (rightEncoder.getDistance() < inCircum) {
+					rightMotor1.set(ControlMode.PercentOutput, INNER_AUTO_SPEED);
+				}
+				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < inCircum && rightEncoder.getDistance() < outCircum) {
-				leftMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
-				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED * inCircum / outCircum);
+				if (leftEncoder.getDistance() < inCircum) {
+					leftMotor1.set(ControlMode.PercentOutput, INNER_AUTO_SPEED);
+				}
+				if (rightEncoder.getDistance() < outCircum) {
+					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
+				}
+				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
 			}
 		} else {
 			return;
