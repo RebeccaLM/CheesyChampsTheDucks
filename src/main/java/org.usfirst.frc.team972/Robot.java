@@ -12,6 +12,8 @@ public class Robot extends IterativeRobot {
 	final int RIGHT_TALON_2_ID = 4;
 	final int INTAKE_TALON_ID = 5;
 	final int RIGHT_STICK_ID = 1;
+	
+	final int INTAKE_BUTTON_ID = 1;
 
 	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(LEFT_TALON_1_ID);
 	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(RIGHT_TALON_1_ID);
@@ -30,9 +32,23 @@ public class Robot extends IterativeRobot {
 	final double HALF_ROBOT_LENGTH = 0.834; //in feet
 
 	final double AUTO_SPEED = 0.75; //SET TO WANTED SPEED DURING AUTO
+	final double INTAKE_TO_WHEEL_SPEED_RATIO = 1;
 
 	public double interpolateVal(double want, double actual) { //for easing in and out of velocities
 		return actual + INTERMEDIATE_VAL * (want - actual);
+	}
+	
+	public void handleIntake(int mode) { // 1: turns when moving, 2: turns when button pressed
+		switch(mode) {
+			case 1:
+				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()) * INTAKE_TO_WHEEL_SPEED_RATIO);
+				break;
+			case 2:
+				
+				break;
+			default:
+				System.err.println("Typo");
+		}
 	}
 
 	@Override
@@ -72,6 +88,7 @@ public class Robot extends IterativeRobot {
 		rightSpeed = interpolateVal(rightStick.getRawAxis(RIGHT_STICK_ID), rightSpeed);
 		leftMotor1.set(ControlMode.PercentOutput, leftSpeed);
 		rightMotor1.set(ControlMode.PercentOutput, rightSpeed);
+		handleIntake(1);
 	}
 
 	public void moveStraight(double distance) { //move forward or backwards, in feet, UNTESTED
@@ -85,7 +102,7 @@ public class Robot extends IterativeRobot {
 			if (rightEncoder.getDistance() < distance) {
 				rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
 			}
-			intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
+			handleIntake(1);
 		}
 		
 		leftMotor1.set(ControlMode.PercentOutput, 0);
@@ -106,7 +123,7 @@ public class Robot extends IterativeRobot {
 				if (rightEncoder.getDistance() < circumference) {
 					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
 				}
-				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
+				handleIntake(1);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < circumference && rightEncoder.getDistance() < circumference) {
@@ -116,7 +133,7 @@ public class Robot extends IterativeRobot {
 				if (rightEncoder.getDistance() < circumference) {
 					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
 				}
-				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
+				handleIntake(1);
 			}
 		} else {
 			return;
@@ -143,7 +160,7 @@ public class Robot extends IterativeRobot {
 				if (rightEncoder.getDistance() < inCircum) {
 					rightMotor1.set(ControlMode.PercentOutput, INNER_AUTO_SPEED);
 				}
-				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
+				handleIntake(1);
 			}
 		} else if(direction < 0) {
 			while(leftEncoder.getDistance() < inCircum && rightEncoder.getDistance() < outCircum) {
@@ -153,7 +170,7 @@ public class Robot extends IterativeRobot {
 				if (rightEncoder.getDistance() < outCircum) {
 					rightMotor1.set(ControlMode.PercentOutput, AUTO_SPEED);
 				}
-				intakeMotor.set(ControlMode.PercentOutput, Math.max(leftMotor1.get(), rightMotor1.get()));
+				handleIntake(1);
 			}
 		} else {
 			return;
