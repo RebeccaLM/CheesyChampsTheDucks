@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/libs/GradleRIO-2019.0.0-alpha-3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/libs/GradleRIO-2019.0.0-alpha-3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/libs/GradleRIO-2019.0.0-alpha-3-groovydoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/libs/GradleRIO-2019.0.0-alpha-3-javadoc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

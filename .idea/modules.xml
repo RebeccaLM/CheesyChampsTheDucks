@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/examples/java/src/main/main.iml" filepath="$PROJECT_DIR$/examples/java/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/main/main2.iml" filepath="$PROJECT_DIR$/src/main/main2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/_archived/coprocessor_java/robot/src/main/main3.iml" filepath="$PROJECT_DIR$/examples/_archived/coprocessor_java/robot/src/main/main3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/_archived/coprocessor_java/coprocessor/src/main/main4.iml" filepath="$PROJECT_DIR$/examples/_archived/coprocessor_java/coprocessor/src/main/main4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/main/java/main5.iml" filepath="$PROJECT_DIR$/src/main/java/main5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/_localtest/src/test/test.iml" filepath="$PROJECT_DIR$/_localtest/src/test/test.iml" />
+    </modules>
+  </component>
+</project>
