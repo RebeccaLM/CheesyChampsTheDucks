@@ -11,12 +11,15 @@ public class Robot extends IterativeRobot {
 	final int LEFT_TALON_2_ID = 3;
 	final int RIGHT_TALON_2_ID = 4;
 	final int JOYSTICK_ID = 1;
+	
+	final double WHEEL_RADIUS = 1/6;
 
 	WPI_TalonSRX leftMotor1 = new WPI_TalonSRX(LEFT_TALON_1_ID);
 	WPI_TalonSRX rightMotor1 = new WPI_TalonSRX(RIGHT_TALON_1_ID);
 	WPI_TalonSRX leftMotor2 = new WPI_TalonSRX(LEFT_TALON_2_ID);
 	WPI_TalonSRX rightMotor2 = new WPI_TalonSRX(RIGHT_TALON_2_ID);
 	Joystick joystick = new Joystick(JOYSTICK_ID);
+	
 	Encoder leftEncoder = new Encoder(1, 1); //MUST FIND CORRECT CONSTRUCTOR
 	Encoder rightEncoder = new Encoder(1, 1);
 	
@@ -34,8 +37,8 @@ public class Robot extends IterativeRobot {
 		leftMotor2.set(ControlMode.Follower, LEFT_TALON_1_ID);
 		rightMotor2.set(ControlMode.Follower, RIGHT_TALON_1_ID);
 
-		leftEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI); //SET TO NUMBER OF FEET PER ROTATION
-		rightEncoder.setDistancePerPulse(Math.pow(2, 2)*Math.PI);
+		leftEncoder.setDistancePerPulse(Math.pow(WHEEL_RADIUS, 2)*Math.PI); //SET TO NUMBER OF FEET PER ROTATION
+		rightEncoder.setDistancePerPulse(Math.pow(WHEEL_RADIUS, 2)*Math.PI);
 	}
 	
 	@Override

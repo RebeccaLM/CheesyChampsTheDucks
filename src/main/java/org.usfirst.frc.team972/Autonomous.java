@@ -20,6 +20,17 @@ public class Autonomous {
 		moveStraight(4);
 		rotate(Math.PI/2, 1);
 		arc(2, Math.PI, 1);
+		
+		//autonomousPath();
+	}
+	
+	public void autonomousPath() {
+		moveStraight(5);
+		rotate(Math.PI/2, -1);
+		moveStraight(10);
+		arc(2, Math.PI, 1);
+		moveStraight(9);
+		arc(5, Math.PI/2, 1);
 	}
 	
 	public void moveStraight(double distance) { //move forward or backwards, in feet, UNTESTED
