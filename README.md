@@ -29,9 +29,9 @@ This is a list of tasks for Team C.
   - [ ] Assembly
 ## Programming
 - [X] Check repository
-- [ ] Teleop tank drive
-  - [X] Write tank drive code (take from another repository) 
-  - [ ] Test tank drive code
+- [ ] Teleop B E L L A R M I N E drive
+  - [X] Write bellermine drive code (take from another repository) 
+  - [ ] Test bellarmine drive code
 - [ ] Autonomous drive code
   - [X] Write basic movement methods
     - [X] Straight movement
